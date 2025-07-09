@@ -1,12 +1,26 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'stock-dashboard-angular';
+export class AppComponent implements OnInit {
+  title = 'Stock Market Data';
+  private firestore: Firestore = inject(Firestore);
+  stocks$: Observable<any[]> = new Observable();
+
+  ngOnInit(): void {
+    const stocksRef = collection(this.firestore, 'nse_bhavcopy');
+    this.stocks$ = collectionData(stocksRef);
+
+    /* this.stocks$.subscribe(data => {
+      console.log('Stocks from Firestore:', data);
+    }); */
+  }
 }
