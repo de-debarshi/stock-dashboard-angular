@@ -1,0 +1,21 @@
+header {
+    text-align: center;
+}
+
+main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+app-grid-display {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+}
+
+table {
+    width: 80%;
+    margin: 0 auto;
+}
