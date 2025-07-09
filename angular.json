@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "stock-temp": {
+    "stock-dashboard-angular": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/stock-temp",
+            "outputPath": "dist/stock-dashboard-angular",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -64,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "stock-temp:build:production"
+              "buildTarget": "stock-dashboard-angular:build:production"
             },
             "development": {
-              "buildTarget": "stock-temp:build:development"
+              "buildTarget": "stock-dashboard-angular:build:development"
             }
           },
           "defaultConfiguration": "development"
