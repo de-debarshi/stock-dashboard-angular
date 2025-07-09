@@ -3,26 +3,5 @@
 </header>
 
 <main>
-  <table border="1" cellpadding="5" cellspacing="0">
-    <thead>
-      <tr>
-        <th>Symbol</th>
-        <th>Series</th>
-        <th>Open</th>
-        <th>High</th>
-        <th>Low</th>
-        <th>Close</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let stock of stocks$ | async">
-        <td>{{ stock.symbol }}</td>
-        <td>{{ stock.series }}</td>
-        <td>{{ stock.open }}</td>
-        <td>{{ stock.high }}</td>
-        <td>{{ stock.low }}</td>
-        <td>{{ stock.close }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <app-grid-display />
 </main>
