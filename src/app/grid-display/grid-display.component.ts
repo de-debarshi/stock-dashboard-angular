@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { AgGridAngular } from "ag-grid-angular";
 import type { ColDef } from "ag-grid-community";
 import { AllCommunityModule, ModuleRegistry, themeQuartz, colorSchemeDarkBlue } from "ag-grid-community";
@@ -9,8 +9,8 @@ import { AsyncPipe } from '@angular/common';
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export interface IRow {
+  name: string;
   symbol: string;
-  series: string;
   open: number;
   high: number;
   low: number;
@@ -28,8 +28,8 @@ export class GridDisplayComponent implements OnInit {
   theme = themeQuartz.withPart(colorSchemeDarkBlue);;
   rowData$: Observable<IRow[]> = new Observable();
   colDefs: ColDef[] = [
+    { field: "name", filter: 'agTextColumnFilter' },
     { field: "symbol", filter: 'agTextColumnFilter' },
-    { field: "series", filter: 'agTextColumnFilter' },
     { field: "open" },
     { field: "high" },
     { field: "low" },
@@ -84,6 +84,7 @@ export class GridDisplayComponent implements OnInit {
 
   ngOnInit(): void {
     const stocksRef = collection(this.firestore, 'nse_bhavcopy');
-    this.rowData$ = collectionData(stocksRef) as Observable<IRow[]>;
+    this.rowData$ = collectionData(stocksRef).pipe(map(rows => (rows as IRow[]).filter(row => (row.name && row.name.trim() !== '') && row.open))
+    ) as Observable<IRow[]>;
   }
 }
