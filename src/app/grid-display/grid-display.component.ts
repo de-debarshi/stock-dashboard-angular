@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from "@angular/core";
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+//import { Firestore, collection, collectionData, limit, query } from '@angular/fire/firestore';
 import { map, Observable } from 'rxjs';
 import { AgGridAngular } from "ag-grid-angular";
 import type { ColDef } from "ag-grid-community";
 import { AllCommunityModule, ModuleRegistry, themeQuartz, colorSchemeDarkBlue } from "ag-grid-community";
 import { AsyncPipe } from '@angular/common';
+import { ref, onValue, Database } from '@angular/fire/database';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -80,11 +81,20 @@ export class GridDisplayComponent implements OnInit {
     }
   ];
   defaultColDef: ColDef = { flex: 1 };
-  private firestore: Firestore = inject(Firestore);
+  //private firestore: Firestore = inject(Firestore);
+  private database: Database = inject(Database);
 
   ngOnInit(): void {
-    const stocksRef = collection(this.firestore, 'nse_bhavcopy');
-    this.rowData$ = collectionData(stocksRef).pipe(map(rows => (rows as IRow[]).filter(row => (row.name && row.name.trim() !== '') && row.open))
-    ) as Observable<IRow[]>;
+    const dbRef = ref(this.database, 'nse_bhavcopy');
+    this.rowData$ = new Observable<IRow[]>(subscriber => {
+      onValue(dbRef, snapshot => {
+        const data = snapshot.val();
+        // Convert object map to array and filter
+        const rows = Object.values(data ?? {}).filter(
+          (row: any) => row.name && row.name.trim() !== '' && row.open
+        ) as IRow[];
+        subscriber.next(rows);
+      });
+    });
   }
 }
